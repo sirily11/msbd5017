@@ -99,4 +99,6 @@ export interface NetworkServiceInterface {
    * Get student by id
    */
   getStudentById(id: number): Promise<NetworkResult<Student>>;
+
+  getStudentByAuthUserId(id: string): Promise<NetworkResult<Student>>;
 }

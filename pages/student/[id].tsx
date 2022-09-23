@@ -1,20 +1,10 @@
-import {
-  Avatar,
-  Breadcrumbs,
-  Card,
-  CardContent,
-  Grid,
-  Link,
-  Typography,
-} from "@mui/material";
-import { Box, Container, Stack } from "@mui/system";
+import { Card, CardContent, Grid, Link, Typography } from "@mui/material";
+import { Container, Stack } from "@mui/system";
 import type { GetServerSideProps, NextPage } from "next";
-import GroupDescriptionCard from "../../components/GroupDescriptionCard";
-import GroupSideBar from "../../components/GroupSideBar";
+import ReactMarkdown from "react-markdown";
 import { UserInfoCard } from "../../components/UserInfoCard";
 import { NetworkService } from "../../services/NetworkService";
 import { Student } from "../../services/NetworkServiceInterface";
-import ReactMarkdown from "react-markdown";
 
 interface Props {
   student: Student;
@@ -97,7 +87,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 
   if (student.error) {
     console.log("Group error: ", student.error);
-
     return {
       notFound: true,
     };

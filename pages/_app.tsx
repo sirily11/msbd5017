@@ -4,6 +4,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { deepGreen } from "../utils/colors";
+import { UserProvider } from "@supabase/auth-helpers-react";
+import Layout from "../components/Layout";
+import { SupabaseService } from "../services/NetworkService";
 
 const queryClient = new QueryClient();
 
@@ -24,7 +27,7 @@ const theme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          color: "white",
+          color: "black",
           backgroundColor: "rgb(255, 255, 255, 0.8)",
           boxShadow: "none",
           height: 64,
@@ -83,13 +86,17 @@ const theme = createTheme({
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ThemeProvider theme={theme}>
-      <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
-        <ReactQueryDevtools />
-        <CssBaseline />
-      </QueryClientProvider>
-    </ThemeProvider>
+    <UserProvider supabaseClient={SupabaseService.supabase}>
+      <ThemeProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <Layout>
+            <Component {...pageProps} />
+            <ReactQueryDevtools />
+            <CssBaseline />
+          </Layout>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </UserProvider>
   );
 }
 

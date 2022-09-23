@@ -9,13 +9,19 @@ import {
   Student,
 } from "./NetworkServiceInterface";
 
+export class SupabaseService {
+  static supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  static supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  static supabase = createClient(
+    SupabaseService.supabaseUrl,
+    SupabaseService.supabaseKey
+  );
+}
 export class NetworkService implements NetworkServiceInterface {
   supabase: SupabaseClient;
 
   constructor() {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY!;
-    this.supabase = createClient(supabaseUrl, supabaseKey);
+    this.supabase = SupabaseService.supabase;
   }
 
   async getSemesters(): Promise<NetworkResult<Semester[]>> {
@@ -129,6 +135,18 @@ export class NetworkService implements NetworkServiceInterface {
       .from("student")
       .select("*, semester(*), group(*)")
       .eq("id", id);
+
+    return {
+      data: result.data && (result.data![0] as any),
+      error: result.error,
+    };
+  }
+
+  async getStudentByAuthUserId(id: string): Promise<NetworkResult<Student>> {
+    const result = await this.supabase
+      .from("student")
+      .select("*, semester(*), group(*)")
+      .eq("uid", id);
 
     return {
       data: result.data && (result.data![0] as any),
