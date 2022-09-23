@@ -8,10 +8,8 @@ import {
 } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { useRouter } from "next/router";
-import React from "react";
 import { Group } from "../services/NetworkServiceInterface";
 import { Chip } from "./Chip";
-import Image from "next/image";
 
 interface Props {
   group: Group;
@@ -36,7 +34,7 @@ export default function GroupSideBar(props: Props) {
 
       <Box mt={1} display="flex">
         {props.group.keywords?.map((keyword) => (
-          <Box mr={1}>
+          <Box mr={1} key={`keyword-${keyword}`}>
             <Chip key={keyword} label={keyword} />
           </Box>
         ))}
