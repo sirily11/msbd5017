@@ -50,7 +50,7 @@ export default function ProjectTable(props: Props) {
   const [selectedSemester, setSelectedSemester] = React.useState<number>(
     props.semesters.length > 0 ? props.semesters[0].id : 0
   );
-  const { data, isLoading } = useGroups(selectedSemester);
+  const { groupsBySemester } = useGroups(selectedSemester);
 
   return (
     <Card>
@@ -71,11 +71,11 @@ export default function ProjectTable(props: Props) {
           ))}
         </Tabs>
         <StyledDataGrid
-          rows={data?.data ? data.data : []}
+          rows={groupsBySemester?.data?.data ? groupsBySemester.data.data : []}
           columns={columns}
           autoHeight={true}
           style={{ minHeight: 500 }}
-          loading={isLoading}
+          loading={groupsBySemester.isLoading}
           hideFooter={true}
           disableSelectionOnClick={true}
         />

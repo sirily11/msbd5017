@@ -24,7 +24,7 @@ export interface Group {
 }
 
 export interface Student {
-  id: number;
+  id?: number;
   firstName: string;
   lastName: string;
   email?: string;
@@ -100,5 +100,20 @@ export interface NetworkServiceInterface {
    */
   getStudentById(id: number): Promise<NetworkResult<Student>>;
 
-  getStudentByAuthUserId(id: string): Promise<NetworkResult<Student>>;
+  getStudentByAuthUserId(
+    id: string
+  ): Promise<NetworkResult<Student | undefined>>;
+
+  /**
+   * Search groups by keyword
+   */
+  searchGroups(keyword: string): Promise<NetworkResult<Group[]>>;
+
+  /**
+   * Create student by auth user id
+   */
+  createStudentByAuthUserId(
+    uid: string,
+    student: Student
+  ): Promise<NetworkResult<Student>>;
 }
