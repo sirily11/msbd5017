@@ -1,53 +1,59 @@
+import Editor from "@monaco-editor/react";
+import { LoadingButton } from "@mui/lab";
 import {
   Autocomplete,
   Avatar,
   Breadcrumbs,
+  Button,
   Card,
   CardContent,
   Divider,
   Grid,
   Link,
-  Paper,
   Stack,
   TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
 import { Box, Container } from "@mui/system";
-import {
-  withPageAuth,
-  getUser,
-  supabaseServerClient,
-} from "@supabase/auth-helpers-nextjs";
+import { getUser, withPageAuth } from "@supabase/auth-helpers-nextjs";
+import { useUser } from "@supabase/auth-helpers-react";
 import { useFormik } from "formik";
 import { GetServerSideProps } from "next";
-import React from "react";
-import { Student } from "../../services/NetworkServiceInterface";
 import Image from "next/image";
-import Editor from "@monaco-editor/react";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import useGroups from "../../hooks/useGroups";
+import { useSemesters } from "../../hooks/useSemesters";
+import useStudent from "../../hooks/useStudent";
+import { NetworkService } from "../../services/NetworkService";
+import {
+  Group,
+  Semester,
+  Student,
+} from "../../services/NetworkServiceInterface";
 
 interface Props {
-  found: boolean;
-  student?: Student;
+  student: Student;
 }
 
 export default function Index(props: Props) {
-  const initialValues: Student = {
-    id: 0,
-    firstName: props.student?.firstName ?? "",
-    lastName: props.student?.lastName ?? "",
-    email: props.student?.email ?? "",
-    github: props.student?.github ?? "",
-    avatar: props.student?.avatar ?? "",
-    summary: props.student?.summary ?? "",
-    semester: props.student?.semester ?? undefined,
-    group: props.student?.group ?? undefined,
-    description: props.student?.description ?? "",
-  };
+  const router = useRouter();
+  const user = useUser();
+  const { updateStudent } = useStudent(user.user?.id);
+  const [groupSearcKey, setGroupSearchKey] = useState("");
+  const { groupsByKeyword } = useGroups(1, groupSearcKey);
+
+  const { semesters } = useSemesters();
 
   const formik = useFormik({
-    initialValues: initialValues,
-    onSubmit: async (values) => {},
+    initialValues: props.student,
+    onSubmit: async (values) => {
+      const result = await updateStudent(values);
+      if (result?.error) {
+        alert(`Error updating student: ${result.error.message}`);
+      }
+    },
   });
 
   return (
@@ -60,7 +66,7 @@ export default function Index(props: Props) {
           </Link>
           <Typography color="text.primary">Profile</Typography>
         </Breadcrumbs>
-        <form>
+        <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={2}>
             <Grid item md={4}>
               <Card>
@@ -80,18 +86,36 @@ export default function Index(props: Props) {
                       name="summary"
                       placeholder="Summary"
                       onChange={formik.handleChange}
-                      value={formik.values.summary}
+                      value={formik.values.summary ?? ""}
                     />
-
                     <Autocomplete
-                      options={[]}
+                      options={groupsByKeyword.data ?? []}
+                      loading={groupsByKeyword.isLoading}
+                      isOptionEqualToValue={(option, value) =>
+                        option.id === value.id
+                      }
+                      getOptionLabel={(option: Group) => option.name}
+                      onInputChange={(e, v) => {
+                        setGroupSearchKey(v);
+                      }}
+                      onChange={(e, v) => {
+                        formik.setFieldValue("group", v);
+                      }}
+                      value={formik.values.group}
                       renderInput={(params) => (
                         <TextField {...params} label="Group" />
                       )}
                     />
-
                     <Autocomplete
-                      options={[]}
+                      options={semesters.data ?? []}
+                      isOptionEqualToValue={(option, value) =>
+                        option.id === value.id
+                      }
+                      getOptionLabel={(option: Semester) => option.name}
+                      onChange={(e, v) => {
+                        formik.setFieldValue("semester", v);
+                      }}
+                      value={formik.values.semester}
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -115,7 +139,7 @@ export default function Index(props: Props) {
                         name="firstName"
                         placeholder="First name"
                         onChange={formik.handleChange}
-                        value={formik.values.firstName}
+                        value={formik.values.firstName ?? ""}
                       />
                       <TextField
                         fullWidth
@@ -123,7 +147,7 @@ export default function Index(props: Props) {
                         name="lastName"
                         placeholder="Last name"
                         onChange={formik.handleChange}
-                        value={formik.values.lastName}
+                        value={formik.values.lastName ?? ""}
                       />
                     </Stack>
                     <Stack direction={"row"} spacing={2}>
@@ -133,7 +157,7 @@ export default function Index(props: Props) {
                         name="email"
                         placeholder="Email"
                         onChange={formik.handleChange}
-                        value={formik.values.email}
+                        value={formik.values.email ?? ""}
                       />
                       <TextField
                         fullWidth
@@ -141,7 +165,7 @@ export default function Index(props: Props) {
                         name="github"
                         placeholder="Github"
                         onChange={formik.handleChange}
-                        value={formik.values.github}
+                        value={formik.values.github ?? ""}
                       />
                     </Stack>
                     <Typography variant="subtitle2" fontWeight={"bold"}>
@@ -154,23 +178,44 @@ export default function Index(props: Props) {
                     >
                       <Stack spacing={1}>
                         <Editor
-                          height="500px"
+                          height="600px"
                           defaultLanguage="markdown"
-                          defaultValue=""
+                          value={formik.values.description}
                           options={{
                             minimap: { enabled: false },
+                          }}
+                          onChange={(value) => {
+                            formik.setFieldValue("description", value);
                           }}
                         />
                         <Divider />
                         <Stack direction={"row"} justifyContent="end">
-                          <Image
-                            src={"/Markdown-mark.svg"}
-                            width={30}
-                            height={30}
-                          />
+                          <Tooltip title="Using markdown">
+                            <Button>
+                              <Image
+                                src={"/Markdown-mark.svg"}
+                                width={30}
+                                height={30}
+                              />
+                            </Button>
+                          </Tooltip>
                         </Stack>
                       </Stack>
                     </Card>
+                  </Stack>
+                  <Stack
+                    direction={"row"}
+                    justifyContent="flex-end"
+                    p={1}
+                    mt={3}
+                  >
+                    <LoadingButton
+                      variant="contained"
+                      type="submit"
+                      loading={formik.isSubmitting}
+                    >
+                      Save Profile
+                    </LoadingButton>
                   </Stack>
                 </CardContent>
               </Card>
@@ -186,16 +231,24 @@ export const getServerSideProps: GetServerSideProps<Props> = withPageAuth({
   redirectTo: "/signIn",
   async getServerSideProps(context) {
     const { user } = await getUser(context);
-    const { data, count } = await supabaseServerClient(context)
-      .from("student")
-      .select("*")
-      .eq("uid", user?.id);
+    const service = new NetworkService();
+    const student = await service.getStudentByAuthUserId(user.id);
 
-    if (data?.length === 0) {
+    if (student.error) {
+      console.log(student.error);
+      return {
+        notFound: true,
+      };
+    }
+
+    if (!Boolean(student.data)) {
+      const createdStudent = await service.createStudentByAuthUserId(user.id, {
+        firstName: "",
+        lastName: "",
+      });
       return {
         props: {
-          found: false,
-          student: null,
+          student: createdStudent.data,
         },
       };
     }
@@ -203,7 +256,7 @@ export const getServerSideProps: GetServerSideProps<Props> = withPageAuth({
     return {
       props: {
         found: true,
-        student: data![0],
+        student: student.data,
       },
     };
   },

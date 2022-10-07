@@ -1,35 +1,35 @@
-import { Button, Card, CardContent } from "@mui/material";
+import { Button, Card, CardContent, Typography } from "@mui/material";
 import { Box, Container, Stack } from "@mui/system";
-import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
-import React, { useCallback } from "react";
-import { NetworkService, SupabaseService } from "../services/NetworkService";
-
+import { SupabaseService } from "../services/NetworkService";
 export default function Login() {
   const router = useRouter();
 
   return (
     <Container>
-      <Card>
-        <CardContent>
-          <Stack>
-            <Box>
-              <Button
-                onClick={async () => {
-                  await SupabaseService.supabase.auth.signIn(
-                    {
-                      provider: "google",
-                    },
-                    { redirectTo: "/signIn" }
-                  );
-                }}
-              >
-                Sign In with Google
-              </Button>
-            </Box>
-          </Stack>
-        </CardContent>
-      </Card>
+      <Box p={5}>
+        <Card>
+          <CardContent>
+            <Stack spacing={2} p={5}>
+              <Typography variant="h5">Authentication</Typography>
+              <Box>
+                <Button
+                  onClick={async () => {
+                    await SupabaseService.supabase.auth.signIn(
+                      {
+                        provider: "google",
+                      },
+                      { redirectTo: window.location.origin }
+                    );
+                  }}
+                >
+                  Sign In with Google
+                </Button>
+              </Box>
+            </Stack>
+          </CardContent>
+        </Card>
+      </Box>
     </Container>
   );
 }

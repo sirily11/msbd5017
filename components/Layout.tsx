@@ -21,6 +21,8 @@ import {
   bindMenu,
   bindPopover,
 } from "material-ui-popup-state/hooks";
+import UserAvatar from "./User/Avatar";
+import Head from "next/head";
 
 export default function Layout({ children }: any) {
   const router = useRouter();
@@ -29,38 +31,16 @@ export default function Layout({ children }: any) {
 
   return (
     <>
+      <Head>
+        <title>MSBD5017 Project</title>
+      </Head>
       <AppBar>
         <Toolbar>
           <Stack direction={"row"} justifyContent="end" width={"100%"}>
-            {user ? (
-              <Avatar
-                sx={{ background: deepGreen, cursor: "pointer" }}
-                {...bindTrigger(popupState)}
-              >
-                A
-              </Avatar>
-            ) : (
-              <Button onClick={() => router.push("/signIn")}>Login</Button>
-            )}
+            <UserAvatar />
           </Stack>
         </Toolbar>
       </AppBar>
-
-      <Menu {...bindMenu(popupState)}>
-        <MenuItem onClick={() => router.push("/profile")}>
-          <Typography>Profile</Typography>
-        </MenuItem>
-        <MenuItem>
-          <Typography
-            onClick={async () => {
-              await SupabaseService.supabase.auth.signOut();
-              popupState.close();
-            }}
-          >
-            LogOut
-          </Typography>
-        </MenuItem>
-      </Menu>
 
       <Box component={"main"} sx={{ mt: "62px" }}>
         {children}

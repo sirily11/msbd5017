@@ -110,10 +110,11 @@ export class NetworkService implements NetworkServiceInterface {
     const result = await this.supabase
       .from("category")
       .select("*")
-      .eq("id", id);
+      .eq("id", id)
+      .single();
 
     return {
-      data: result.data && (result.data![0] as any),
+      data: result.data,
       error: result.error,
     };
   }
@@ -122,10 +123,11 @@ export class NetworkService implements NetworkServiceInterface {
     const result = await this.supabase
       .from("group")
       .select("*, students:student(*)")
-      .eq("id", id);
+      .eq("id", id)
+      .single();
 
     return {
-      data: result.data && (result.data![0] as any),
+      data: result.data,
       error: result.error,
     };
   }
@@ -134,22 +136,67 @@ export class NetworkService implements NetworkServiceInterface {
     const result = await this.supabase
       .from("student")
       .select("*, semester(*), group(*)")
-      .eq("id", id);
+      .eq("id", id)
+      .single();
 
     return {
-      data: result.data && (result.data![0] as any),
+      data: result.data,
       error: result.error,
     };
   }
 
-  async getStudentByAuthUserId(id: string): Promise<NetworkResult<Student>> {
+  async getStudentByAuthUserId(
+    id: string
+  ): Promise<NetworkResult<Student | undefined>> {
     const result = await this.supabase
       .from("student")
       .select("*, semester(*), group(*)")
-      .eq("uid", id);
+      .eq("uid", id)
+      .single();
+
+    if (result.data === null) {
+      return {
+        data: undefined,
+        error: "Cannot find student",
+      };
+    }
 
     return {
-      data: result.data && (result.data![0] as any),
+      data: result.data,
+      error: result.error,
+    };
+  }
+
+  async searchGroups(keyword: string): Promise<NetworkResult<Group[]>> {
+    const result = await this.supabase
+      .from("group")
+      .select("*, students:student(id)")
+      .ilike("name", `%${keyword}%`);
+
+    return {
+      data: result.data as Group[],
+      error: result.error,
+    };
+  }
+
+  async createStudentByAuthUserId(
+    uid: string,
+    student: Student
+  ): Promise<NetworkResult<Student>> {
+    const result = await this.supabase
+      .from("student")
+      .upsert({
+        ...student,
+        gid: student.group?.id,
+        sid: student.semester?.id,
+        group: undefined,
+        semester: undefined,
+        uid,
+      })
+      .single();
+
+    return {
+      data: result.data as Student,
       error: result.error,
     };
   }

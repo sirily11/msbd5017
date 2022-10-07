@@ -3,8 +3,14 @@ import React from "react";
 import { NetworkService } from "../services/NetworkService";
 
 export function useSemesters() {
-  return useQuery(["semesters"], () => {
+  const semesters = useQuery(["semesters"], async () => {
     const service = new NetworkService();
-    return service.getSemesters();
+    const data = await service.getSemesters();
+    if (data.data) {
+      return data.data;
+    }
+    return [];
   });
+
+  return { semesters };
 }
