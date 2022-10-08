@@ -37,6 +37,16 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const service = new NetworkService();
   const semesters = await service.getSemesters();
   const statistics = await service.getStatistics();
+  if (semesters.data.length === 0) {
+    return {
+      props: {
+        semesters: [],
+        statistics: statistics.data,
+        currentSemester: 0,
+      },
+    };
+  }
+
   let currentSemester = semesters.data[0].id;
 
   if (context.query?.semester) {
