@@ -48,15 +48,13 @@ export default function UserAvatar() {
         >
           <Typography>Profile</Typography>
         </MenuItem>
-        <MenuItem>
-          <Typography
-            onClick={async () => {
-              popupState.close();
-              await SupabaseService.supabase.auth.signOut();
-            }}
-          >
-            Sign Out
-          </Typography>
+        <MenuItem
+          onClick={async () => {
+            popupState.close();
+            await SupabaseService.supabase.auth.signOut();
+          }}
+        >
+          <Typography>Sign Out</Typography>
         </MenuItem>
       </Menu>
     </div>

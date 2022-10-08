@@ -1,83 +1,109 @@
 import Editor from "@monaco-editor/react";
 import { LoadingButton } from "@mui/lab";
 import {
-  Autocomplete,
-  Avatar,
+  Typography,
   Breadcrumbs,
-  Button,
+  Grid,
   Card,
   CardContent,
-  Divider,
-  Grid,
-  Link,
-  Stack,
-  TextField,
   Tooltip,
-  Typography,
+  Avatar,
+  TextField,
+  Autocomplete,
+  Button,
+  Divider,
+  Link,
 } from "@mui/material";
-import { Box, Container } from "@mui/system";
-import {
-  getUser,
-  supabaseServerClient,
-  withPageAuth,
-} from "@supabase/auth-helpers-nextjs";
-import { useUser } from "@supabase/auth-helpers-react";
+import { Container, Stack, Box } from "@mui/system";
+import ChipInput from "@sarakusha/material-ui-chip-input";
 import { useFormik } from "formik";
-import { GetServerSideProps } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
-import { useState } from "react";
+import React from "react";
+import { useCategories } from "../../hooks/useCategory";
 import useGroups from "../../hooks/useGroups";
 import { useSemesters } from "../../hooks/useSemesters";
-import useStudent from "../../hooks/useStudent";
-import { NetworkService } from "../../services/NetworkService";
-import {
-  Group,
-  Semester,
-  Student,
-} from "../../services/NetworkServiceInterface";
+import { Group, Semester } from "../../services/NetworkServiceInterface";
 
 interface Props {
-  student: Student;
+  group?: Group;
 }
 
-export default function Index(props: Props) {
-  const user = useUser();
-  const { updateStudent } = useStudent(user.user?.id);
-  const [groupSearcKey, setGroupSearchKey] = useState("");
-  const { groupsByKeyword } = useGroups(1, groupSearcKey);
+const defaultGroup: Group = {
+  //@ts-ignore
+  id: undefined,
+  name: "",
+  description: "",
+  summary: "",
+  //@ts-ignore
+  semester: undefined,
+  //@ts-ignore
+  category: undefined,
+  students: [],
+};
+
+export default function GroupForm(props: Props) {
+  const { semesters } = useSemesters();
+  const { categories } = useCategories();
+  const { createOrUpdateGroup } = useGroups(1, "", props?.group?.id);
+  const isCreate = props.group === undefined;
+  const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { semesters } = useSemesters();
-
   const formik = useFormik({
-    initialValues: props.student,
-    onSubmit: async (values) => {
-      const result = await updateStudent(values);
+    initialValues: props.group ?? defaultGroup,
+    onSubmit: async (values: any) => {
+      const result = await createOrUpdateGroup(isCreate, values);
       if (result?.error) {
-        enqueueSnackbar(`Error updating student: ${result.error.message}`, {
-          variant: "error",
-          anchorOrigin: { horizontal: "right", vertical: "top" },
-        });
+        console.error(result.error);
+        enqueueSnackbar(
+          `Error ${isCreate ? "Inserting" : "Updating"} group: ${
+            result.error.message
+          }`,
+          {
+            variant: "error",
+            anchorOrigin: { horizontal: "right", vertical: "top" },
+          }
+        );
         return;
       }
-      enqueueSnackbar("Student updated successfully", {
-        variant: "success",
-        anchorOrigin: { horizontal: "right", vertical: "top" },
-      });
+
+      enqueueSnackbar(
+        `Successfully ${isCreate ? "Inserted" : "Updated"} group`,
+        {
+          variant: "success",
+          anchorOrigin: { horizontal: "right", vertical: "top" },
+        }
+      );
+
+      if (isCreate) {
+        await router.push(`/group/${result?.data?.id}`);
+      }
     },
   });
 
   return (
     <Container>
       <Stack pt={2} spacing={2}>
-        <Typography variant="h5">Profile</Typography>
+        <Typography variant="h5">Group</Typography>
         <Breadcrumbs aria-label="breadcrumb">
           <Link underline="hover" color="inherit" href="/">
             Home
           </Link>
-          <Typography color="text.primary">Profile</Typography>
+          {props.group && (
+            <Link
+              underline="hover"
+              color="inherit"
+              href={`/group/${props.group?.id}`}
+            >
+              Group {props.group.id}
+            </Link>
+          )}
+
+          <Typography color="text.primary">
+            {props.group ? "Edit" : "Create"}
+          </Typography>
         </Breadcrumbs>
         <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={2}>
@@ -101,24 +127,7 @@ export default function Index(props: Props) {
                       onChange={formik.handleChange}
                       value={formik.values.summary ?? ""}
                     />
-                    <Autocomplete
-                      options={groupsByKeyword.data ?? []}
-                      loading={groupsByKeyword.isLoading}
-                      isOptionEqualToValue={(option, value) =>
-                        option.id === value.id
-                      }
-                      getOptionLabel={(option: Group) => option.name}
-                      onInputChange={(e, v) => {
-                        setGroupSearchKey(v);
-                      }}
-                      onChange={(e, v) => {
-                        formik.setFieldValue("group", v);
-                      }}
-                      value={formik.values.group}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Group" />
-                      )}
-                    />
+
                     <Autocomplete
                       options={semesters.data ?? []}
                       isOptionEqualToValue={(option, value) =>
@@ -137,6 +146,40 @@ export default function Index(props: Props) {
                         />
                       )}
                     />
+
+                    <Autocomplete
+                      options={categories.data ?? []}
+                      isOptionEqualToValue={(option, value) =>
+                        option.id === value.id
+                      }
+                      getOptionLabel={(option: Semester) => option.name}
+                      onChange={(e, v) => {
+                        formik.setFieldValue("category", v);
+                      }}
+                      value={formik.values.category}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Category"
+                          name="category"
+                        />
+                      )}
+                    />
+
+                    <Button variant="contained" component="label">
+                      Upload Presentation
+                      <input
+                        hidden
+                        accept="application/pdf"
+                        multiple
+                        type="file"
+                      />
+                    </Button>
+                    <Box pl={1}>
+                      <Typography variant="caption">
+                        Only PDF format is supported
+                      </Typography>
+                    </Box>
                   </Stack>
                 </CardContent>
               </Card>
@@ -148,37 +191,34 @@ export default function Index(props: Props) {
                     <Stack direction={"row"} spacing={2}>
                       <TextField
                         fullWidth
-                        label="First name"
-                        name="firstName"
-                        placeholder="First name"
+                        label="Name"
+                        name="name"
+                        placeholder="Name"
                         onChange={formik.handleChange}
-                        value={formik.values.firstName ?? ""}
-                      />
-                      <TextField
-                        fullWidth
-                        label="Last name"
-                        name="lastName"
-                        placeholder="Last name"
-                        onChange={formik.handleChange}
-                        value={formik.values.lastName ?? ""}
+                        value={formik.values.name ?? ""}
                       />
                     </Stack>
                     <Stack direction={"row"} spacing={2}>
                       <TextField
                         fullWidth
-                        label="Email"
-                        name="email"
-                        placeholder="Email"
-                        onChange={formik.handleChange}
-                        value={formik.values.email ?? ""}
-                      />
-                      <TextField
-                        fullWidth
                         label="Github"
                         name="github"
-                        placeholder="Github"
+                        placeholder="github"
                         onChange={formik.handleChange}
                         value={formik.values.github ?? ""}
+                      />
+                    </Stack>
+                    <Stack>
+                      <Typography variant="subtitle2" fontWeight={"bold"}>
+                        Keywords
+                      </Typography>
+                      <ChipInput
+                        defaultValue={formik.values.keywords}
+                        variant="outlined"
+                        helperText="Press enter to add a keyword."
+                        onChange={(chips) => {
+                          formik.setFieldValue("keywords", chips);
+                        }}
                       />
                     </Stack>
                     <Typography variant="subtitle2" fontWeight={"bold"}>
@@ -227,7 +267,7 @@ export default function Index(props: Props) {
                       type="submit"
                       loading={formik.isSubmitting}
                     >
-                      Save Profile
+                      Save Group Info
                     </LoadingButton>
                   </Stack>
                 </CardContent>
@@ -239,50 +279,3 @@ export default function Index(props: Props) {
     </Container>
   );
 }
-
-export const getServerSideProps: GetServerSideProps<Props> = withPageAuth({
-  redirectTo: "/signIn",
-  async getServerSideProps(context) {
-    const { user } = await getUser(context);
-    const service = new NetworkService(supabaseServerClient(context));
-    const student = await service.getStudentByAuthUserId(user.id);
-
-    if (student.error) {
-      console.log(student.error);
-      return {
-        notFound: true,
-      };
-    }
-
-    if (!Boolean(student.data)) {
-      const createdStudent = await service.createOrUpdateStudentByAuthUserId(
-        user.id,
-        {
-          firstName: "",
-          lastName: "",
-          is_admin: false,
-        }
-      );
-
-      if (createdStudent.error) {
-        console.log("Creation error", createdStudent.error);
-        return {
-          notFound: true,
-        };
-      }
-
-      return {
-        props: {
-          student: createdStudent.data,
-        },
-      };
-    }
-
-    return {
-      props: {
-        found: true,
-        student: student.data,
-      },
-    };
-  },
-});

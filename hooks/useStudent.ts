@@ -8,7 +8,7 @@ export default function useStudent(studentId?: string) {
     async (student: Student) => {
       if (studentId) {
         const service = new NetworkService();
-        const result = await service.createStudentByAuthUserId(
+        const result = await service.createOrUpdateStudentByAuthUserId(
           studentId,
           student
         );

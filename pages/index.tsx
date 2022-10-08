@@ -9,6 +9,7 @@ import { Semester, Statistic } from "../services/NetworkServiceInterface";
 interface Props {
   semesters: Semester[];
   statistics: Statistic;
+  currentSemester: number;
 }
 
 const Home: NextPage<Props> = (props: Props) => {
@@ -19,7 +20,10 @@ const Home: NextPage<Props> = (props: Props) => {
           MSBD5017 Projects
         </Typography>
         <StatisticsCard statistics={props.statistics} />
-        <ProjectTable semesters={props.semesters} />
+        <ProjectTable
+          semesters={props.semesters}
+          currentSemester={props.currentSemester}
+        />
       </Stack>
     </Container>
   );
@@ -33,6 +37,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const service = new NetworkService();
   const semesters = await service.getSemesters();
   const statistics = await service.getStatistics();
+  let currentSemester = semesters.data[0].id;
+
+  if (context.query?.semester) {
+    currentSemester = parseInt(context.query?.semester as string);
+  }
 
   if (semesters.error || statistics.error) {
     return {
@@ -44,6 +53,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     props: {
       semesters: semesters.data,
       statistics: statistics.data,
+      currentSemester: currentSemester,
     },
   };
 };

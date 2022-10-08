@@ -1,34 +1,10 @@
-import {
-  AppBar,
-  Avatar,
-  Button,
-  Menu,
-  MenuItem,
-  Popover,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { AppBar, Toolbar, Typography, Link } from "@mui/material";
 import { Box, Stack } from "@mui/system";
-import { useUser } from "@supabase/auth-helpers-react";
-import { SupabaseClient, User } from "@supabase/supabase-js";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { NetworkService, SupabaseService } from "../services/NetworkService";
-import { deepGreen } from "../utils/colors";
-import {
-  usePopupState,
-  bindTrigger,
-  bindMenu,
-  bindPopover,
-} from "material-ui-popup-state/hooks";
-import UserAvatar from "./User/Avatar";
 import Head from "next/head";
+import { NextCirculatProgressBar, NextLinearProgressBar } from "./PageProgress";
+import UserAvatar from "./User/Avatar";
 
 export default function Layout({ children }: any) {
-  const router = useRouter();
-  const { user } = useUser();
-  const popupState = usePopupState({ variant: "popover", popupId: "demoMenu" });
-
   return (
     <>
       <Head>
@@ -36,12 +12,24 @@ export default function Layout({ children }: any) {
       </Head>
       <AppBar>
         <Toolbar>
-          <Stack direction={"row"} justifyContent="end" width={"100%"}>
-            <UserAvatar />
+          <Stack
+            direction={"row"}
+            justifyContent="space-between"
+            width={"100%"}
+          >
+            <Typography variant="h6">
+              <Link href={"/"} underline="none">
+                MSBD5017 HomePage
+              </Link>
+            </Typography>
+            <Stack direction={"row"} spacing={2}>
+              <NextCirculatProgressBar />
+              <UserAvatar />
+            </Stack>
           </Stack>
         </Toolbar>
       </AppBar>
-
+      <NextLinearProgressBar />
       <Box component={"main"} sx={{ mt: "62px" }}>
         {children}
       </Box>

@@ -10,6 +10,7 @@ specifiers:
   '@mui/material': ^5.10.6
   '@mui/system': ^5.10.6
   '@mui/x-data-grid': ^5.17.3
+  '@sarakusha/material-ui-chip-input': ^2.0.1
   '@supabase/auth-helpers-nextjs': ^0.2.8
   '@supabase/auth-helpers-react': ^0.2.4
   '@supabase/auth-ui-react': ^0.2.0
@@ -26,6 +27,7 @@ specifiers:
   material-ui-popup-state: ^4.1.0
   monaco-editor: ^0.34.0
   next: 12.3.1
+  notistack: ^2.0.5
   react: 18.2.0
   react-dom: 18.2.0
   react-markdown: ^8.0.3
@@ -41,6 +43,7 @@ dependencies:
   '@mui/material': 5.10.6_af5ln35zuaotaffazii6n6bke4
   '@mui/system': 5.10.6_4mv32nu4vciambuqqzuu4gtvj4
   '@mui/x-data-grid': 5.17.3_tfaux7nhmx624dgof2icasxrfm
+  '@sarakusha/material-ui-chip-input': 2.0.1_nwbxdwmxr55gydr5fxczfh2tya
   '@supabase/auth-helpers-nextjs': 0.2.8
   '@supabase/auth-helpers-react': 0.2.4
   '@supabase/auth-ui-react': 0.2.0_biqbaboplfbrettd7655fr4n2y
@@ -52,6 +55,7 @@ dependencies:
   material-ui-popup-state: 4.1.0_af5ln35zuaotaffazii6n6bke4
   monaco-editor: 0.34.0
   next: 12.3.1_ir3quccc6i62x6qn6jjhyjjiey
+  notistack: 2.0.5_nwbxdwmxr55gydr5fxczfh2tya
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-markdown: 8.0.3_w5j4k42lgipnm43s3brx6h3c34
@@ -987,6 +991,26 @@ packages:
     resolution: {integrity: sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==}
     dev: true
 
+  /@sarakusha/material-ui-chip-input/2.0.1_nwbxdwmxr55gydr5fxczfh2tya:
+    resolution: {integrity: sha512-OuWjmrIyQW1hJlypEEtEcUNZJydb0NVAIYTiFot5jemAznm6AP8Lzh5agot/A6TbEBfMkyHUsKsu5WaCcSO+8g==}
+    peerDependencies:
+      '@emotion/react': ^11.8.2
+      '@emotion/styled': ^11.10.4
+      '@mui/material': ^5.5.3
+      react: ^18
+      react-dom: ^18
+    dependencies:
+      '@emotion/react': 11.10.4_axxkdcpdr7up57umjkldobkynm
+      '@emotion/styled': 11.10.4_sn4wuyy54zwps25tv4w7lbiz6i
+      '@mui/material': 5.10.6_af5ln35zuaotaffazii6n6bke4
+      autosuggest-highlight: 3.3.4
+      classnames: 2.3.2
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-autosuggest: 10.1.0_react@18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
   /@stitches/core/1.2.8:
     resolution: {integrity: sha512-Gfkvwk9o9kE9r9XNBmJRfV8zONvXThnm1tcuojL04Uy5uRyqg93DC83lDebl0rocZCfKSjUv+fWYtMQmEDJldg==}
     dev: false
@@ -1423,6 +1447,12 @@ packages:
     resolution: {integrity: sha512-eBvWn1lvIApYMhzQMsu9ciLfkBY499mFZlNqG+/9WR7PVlroQw0vG30cOQQbaKz3sCEc44TAOu2ykzqXSNnwag==}
     dev: true
 
+  /autosuggest-highlight/3.3.4:
+    resolution: {integrity: sha512-j6RETBD2xYnrVcoV1S5R4t3WxOlWZKyDQjkwnggDPSjF5L4jV98ZltBpvPvbkM1HtoSe5o+bNrTHyjPbieGeYA==}
+    dependencies:
+      remove-accents: 0.4.2
+    dev: false
+
   /axe-core/4.4.3:
     resolution: {integrity: sha512-32+ub6kkdhhWick/UjvEwRchgoetXqTK14INLqbGm5U2TzBkBNF3nQtLYm8ovxSkQWArjEQvftCKryjZaATu3w==}
     engines: {node: '>=4'}
@@ -1809,6 +1839,10 @@ packages:
       d: 1.0.1
       es5-ext: 0.10.62
       es6-symbol: 3.1.3
+    dev: false
+
+  /es6-promise/4.2.8:
+    resolution: {integrity: sha512-HJDGx5daxeIvxdBxvG2cb9g4tEvwIk3i8+nhX0yGrYmZUzbkdg8QbDevheDB8gd0//uPj4c1EQua8Q+MViT0/w==}
     dev: false
 
   /es6-symbol/3.1.3:
@@ -3321,10 +3355,38 @@ packages:
     resolution: {integrity: sha512-5PDmaAsVfnWUgTUbJ3ERwn7u79Z0dYxN9ErxCpVJJqe2RK0PJ3z+iFUxuqjwtlDDegXvtWoxD/3Fzxox7tFGWA==}
     dev: false
 
+  /notistack/2.0.5_nwbxdwmxr55gydr5fxczfh2tya:
+    resolution: {integrity: sha512-Ig2T1Muqkc1PaSQcEDrK7diKv6cBxw02Iq6uv074ySfgq524TV5lK41diAb6OSsaiWfp3aRt+T3+0MF8m2EcJQ==}
+    peerDependencies:
+      '@emotion/react': ^11.4.1
+      '@emotion/styled': ^11.3.0
+      '@mui/material': ^5.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@emotion/react':
+        optional: true
+      '@emotion/styled':
+        optional: true
+    dependencies:
+      '@emotion/react': 11.10.4_axxkdcpdr7up57umjkldobkynm
+      '@emotion/styled': 11.10.4_sn4wuyy54zwps25tv4w7lbiz6i
+      '@mui/material': 5.10.6_af5ln35zuaotaffazii6n6bke4
+      clsx: 1.2.1
+      hoist-non-react-statics: 3.3.2
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
   /nth-check/2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
     dependencies:
       boolbase: 1.0.0
+    dev: false
+
+  /object-assign/3.0.0:
+    resolution: {integrity: sha512-jHP15vXVGeVh1HuaA2wY6lxk+whK/x4KBG88VXeRma7CCun7iGD5qPc4eYykQ9sdQvg8jkwFKsSxHln2ybW3xQ==}
+    engines: {node: '>=0.10.0'}
     dev: false
 
   /object-assign/4.1.1:
@@ -3518,6 +3580,19 @@ packages:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
     dev: true
 
+  /react-autosuggest/10.1.0_react@18.2.0:
+    resolution: {integrity: sha512-/azBHmc6z/31s/lBf6irxPf/7eejQdR0IqnZUzjdSibtlS8+Rw/R79pgDAo6Ft5QqCUTyEQ+f0FhL+1olDQ8OA==}
+    peerDependencies:
+      react: '>=16.3.0'
+    dependencies:
+      es6-promise: 4.2.8
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-themeable: 1.1.0
+      section-iterator: 2.0.0
+      shallow-equal: 1.2.1
+    dev: false
+
   /react-dom/18.2.0_react@18.2.0:
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
     peerDependencies:
@@ -3564,6 +3639,12 @@ packages:
       vfile: 5.3.5
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /react-themeable/1.1.0:
+    resolution: {integrity: sha512-kl5tQ8K+r9IdQXZd8WLa+xxYN04lLnJXRVhHfdgwsUJr/SlKJxIejoc9z9obEkx1mdqbTw1ry43fxEUwyD9u7w==}
+    dependencies:
+      object-assign: 3.0.0
     dev: false
 
   /react-transition-group/4.4.5_biqbaboplfbrettd7655fr4n2y:
@@ -3802,6 +3883,10 @@ packages:
       loose-envify: 1.4.0
     dev: false
 
+  /section-iterator/2.0.0:
+    resolution: {integrity: sha512-xvTNwcbeDayXotnV32zLb3duQsP+4XosHpb/F+tu6VzEZFmIjzPdNk6/O+QOOx5XTh08KL2ufdXeCO33p380pQ==}
+    dev: false
+
   /semver/6.3.0:
     resolution: {integrity: sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==}
     hasBin: true
@@ -3813,6 +3898,10 @@ packages:
     dependencies:
       lru-cache: 6.0.0
     dev: true
+
+  /shallow-equal/1.2.1:
+    resolution: {integrity: sha512-S4vJDjHHMBaiZuT9NPb616CSmLf618jawtv3sufLl6ivK8WocjAo58cXwbRV1cgqxH0Qbv+iUt6m05eqEa2IRA==}
+    dev: false
 
   /shebang-command/2.0.0:
     resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}

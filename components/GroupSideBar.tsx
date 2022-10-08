@@ -1,6 +1,7 @@
 import {
   Avatar,
   AvatarGroup,
+  Button,
   CardMedia,
   Divider,
   Link,
@@ -66,6 +67,12 @@ export default function GroupSideBar(props: Props) {
           </Avatar>
         ))}
       </AvatarGroup>
+      <Button
+        variant="outlined"
+        onClick={() => router.push(`/group/${props.group.id}/edit`)}
+      >
+        Edit group info
+      </Button>
     </Stack>
   );
 }
