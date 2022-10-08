@@ -1,7 +1,7 @@
 import { Box, Container } from "@mui/system";
 import { useRouter } from "next/router";
 import AuthenticationForm from "../components/Auth/AuthenticationForm";
-export default function SignIn() {
+export default function SignUp() {
   const router = useRouter();
 
   return (
@@ -13,7 +13,7 @@ export default function SignIn() {
         alignContent="center"
         alignItems="center"
       >
-        <AuthenticationForm />
+        <AuthenticationForm isSignUp />
       </Box>
     </Container>
   );
