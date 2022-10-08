@@ -1,12 +1,13 @@
-import "../styles/globals.css";
-import type { AppProps } from "next/app";
+import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { UserProvider } from "@supabase/auth-helpers-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
-import { deepGreen } from "../utils/colors";
-import { UserProvider } from "@supabase/auth-helpers-react";
+import type { AppProps } from "next/app";
+import { SnackbarProvider } from "notistack";
 import Layout from "../components/Layout";
 import { SupabaseService } from "../services/NetworkService";
+import "../styles/globals.css";
+import { deepGreen } from "../utils/colors";
 
 const queryClient = new QueryClient();
 
@@ -86,17 +87,19 @@ const theme = createTheme({
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <UserProvider supabaseClient={SupabaseService.supabase}>
-      <ThemeProvider theme={theme}>
-        <QueryClientProvider client={queryClient}>
-          <Layout>
-            <Component {...pageProps} />
-            <ReactQueryDevtools />
-            <CssBaseline />
-          </Layout>
-        </QueryClientProvider>
-      </ThemeProvider>
-    </UserProvider>
+    <SnackbarProvider>
+      <UserProvider supabaseClient={SupabaseService.supabase}>
+        <ThemeProvider theme={theme}>
+          <QueryClientProvider client={queryClient}>
+            <Layout>
+              <Component {...pageProps} />
+              <ReactQueryDevtools />
+              <CssBaseline />
+            </Layout>
+          </QueryClientProvider>
+        </ThemeProvider>
+      </UserProvider>
+    </SnackbarProvider>
   );
 }
 

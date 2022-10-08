@@ -5,9 +5,11 @@ import { Semester } from "../services/NetworkServiceInterface";
 import useGroups from "../hooks/useGroups";
 import { StyledDataGrid } from "./StyledDataGrid";
 import { gray } from "../utils/colors";
+import { useRouter } from "next/router";
 
 interface Props {
   semesters: Semester[];
+  currentSemester: number;
 }
 
 const columns: GridColumns = [
@@ -47,8 +49,9 @@ const columns: GridColumns = [
 ];
 
 export default function ProjectTable(props: Props) {
+  const router = useRouter();
   const [selectedSemester, setSelectedSemester] = React.useState<number>(
-    props.semesters.length > 0 ? props.semesters[0].id : 0
+    props.currentSemester
   );
   const { groupsBySemester } = useGroups(selectedSemester);
 
@@ -59,6 +62,7 @@ export default function ProjectTable(props: Props) {
           value={selectedSemester}
           sx={{ background: gray }}
           onChange={(e, v) => {
+            router.push(`/?semester=${v}`);
             setSelectedSemester(v);
           }}
         >

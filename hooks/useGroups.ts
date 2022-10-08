@@ -1,8 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useCallback } from "react";
 import { NetworkService } from "../services/NetworkService";
+import { Group } from "../services/NetworkServiceInterface";
 
-export default function useGroups(semester?: number, keyword?: string) {
+export default function useGroups(
+  semester?: number,
+  keyword?: string,
+  groupId?: number
+) {
   const groupsBySemester = useQuery(["groups", semester], () => {
     const service = new NetworkService();
     if (semester) {
@@ -24,8 +29,18 @@ export default function useGroups(semester?: number, keyword?: string) {
     return [];
   });
 
+  const createOrUpdateGroup = useCallback(
+    async (isCreate: boolean, group: Group) => {
+      const service = new NetworkService();
+      const result = await service.createOrUpdateGroup(isCreate, group);
+      return result;
+    },
+    [groupId]
+  );
+
   return {
     groupsBySemester,
     groupsByKeyword,
+    createOrUpdateGroup,
   };
 }

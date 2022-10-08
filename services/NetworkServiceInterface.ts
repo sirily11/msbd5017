@@ -34,6 +34,7 @@ export interface Student {
   summary?: string;
   group?: Group;
   semester?: Semester;
+  is_admin: boolean;
 }
 
 export interface Statistic {
@@ -112,8 +113,17 @@ export interface NetworkServiceInterface {
   /**
    * Create student by auth user id
    */
-  createStudentByAuthUserId(
+  createOrUpdateStudentByAuthUserId(
     uid: string,
     student: Student
   ): Promise<NetworkResult<Student>>;
+
+  createOrUpdateGroup(
+    isCreate: boolean,
+    group: Group
+  ): Promise<NetworkResult<Group>>;
+
+  getCategories(): Promise<NetworkResult<Category[]>>;
+
+  deleteGroup(id: number): Promise<NetworkResult<void>>;
 }

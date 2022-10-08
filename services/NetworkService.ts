@@ -20,8 +20,8 @@ export class SupabaseService {
 export class NetworkService implements NetworkServiceInterface {
   supabase: SupabaseClient;
 
-  constructor() {
-    this.supabase = SupabaseService.supabase;
+  constructor(supabase?: SupabaseClient) {
+    this.supabase = supabase ?? SupabaseService.supabase;
   }
 
   async getSemesters(): Promise<NetworkResult<Semester[]>> {
@@ -122,7 +122,7 @@ export class NetworkService implements NetworkServiceInterface {
   async getGroupById(id: number): Promise<NetworkResult<Group>> {
     const result = await this.supabase
       .from("group")
-      .select("*, students:student(*)")
+      .select("*, students:student(*), category(*), semester(*)")
       .eq("id", id)
       .single();
 
@@ -157,7 +157,7 @@ export class NetworkService implements NetworkServiceInterface {
     if (result.data === null) {
       return {
         data: undefined,
-        error: "Cannot find student",
+        error: undefined,
       };
     }
 
@@ -179,7 +179,7 @@ export class NetworkService implements NetworkServiceInterface {
     };
   }
 
-  async createStudentByAuthUserId(
+  async createOrUpdateStudentByAuthUserId(
     uid: string,
     student: Student
   ): Promise<NetworkResult<Student>> {
@@ -197,6 +197,58 @@ export class NetworkService implements NetworkServiceInterface {
 
     return {
       data: result.data as Student,
+      error: result.error,
+    };
+  }
+
+  async createOrUpdateGroup(
+    isCreate: boolean,
+    group: Group
+  ): Promise<NetworkResult<Group>> {
+    let newGroup = {
+      ...group,
+      cid: group.category?.id,
+      sid: group.semester?.id,
+      category: undefined,
+      students: undefined,
+      semester: undefined,
+    };
+
+    if (isCreate) {
+      const result = await this.supabase
+        .from("group")
+        .insert(newGroup)
+        .single();
+
+      return {
+        data: result.data as Group,
+        error: result.error,
+      };
+    }
+
+    console.log("Updating group", newGroup);
+    const result = await this.supabase.from("group").update(newGroup).single();
+
+    return {
+      data: result.data as Group,
+      error: result.error,
+    };
+  }
+
+  async getCategories(): Promise<NetworkResult<Category[]>> {
+    const result = await this.supabase.from("category").select("*");
+
+    return {
+      data: result.data as Category[],
+      error: result.error,
+    };
+  }
+
+  async deleteGroup(id: number): Promise<NetworkResult<void>> {
+    const result = await this.supabase.from("group").delete().eq("id", id);
+
+    return {
+      data: undefined,
       error: result.error,
     };
   }
