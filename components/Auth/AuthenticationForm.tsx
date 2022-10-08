@@ -2,6 +2,7 @@ import { LoadingButton } from "@mui/lab";
 import { Card, CardContent, Typography, TextField, Link } from "@mui/material";
 import { Stack, Box } from "@mui/system";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { useUser } from "@supabase/auth-helpers-react";
 import { useFormik } from "formik";
 import router from "next/router";
 import { useSnackbar } from "notistack";
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export default function AuthenticationForm(props: Props) {
+  const { user, checkSession } = useUser();
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -37,7 +39,7 @@ export default function AuthenticationForm(props: Props) {
             variant: "success",
             anchorOrigin: {
               vertical: "top",
-              horizontal: "center",
+              horizontal: "right",
             },
           });
         }
@@ -54,11 +56,12 @@ export default function AuthenticationForm(props: Props) {
           variant: "error",
           anchorOrigin: {
             vertical: "top",
-            horizontal: "center",
+            horizontal: "right",
           },
         });
         return;
       }
+      checkSession();
       await router.push("/");
     },
   });
