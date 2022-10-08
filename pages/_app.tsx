@@ -1,11 +1,11 @@
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { UserProvider } from "@supabase/auth-helpers-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import type { AppProps } from "next/app";
 import { SnackbarProvider } from "notistack";
 import Layout from "../components/Layout";
-import { SupabaseService } from "../services/NetworkService";
 import "../styles/globals.css";
 import { deepGreen } from "../utils/colors";
 
@@ -88,7 +88,7 @@ const theme = createTheme({
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <SnackbarProvider>
-      <UserProvider supabaseClient={SupabaseService.supabase}>
+      <UserProvider supabaseClient={supabaseClient}>
         <ThemeProvider theme={theme}>
           <QueryClientProvider client={queryClient}>
             <Layout>

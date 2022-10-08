@@ -1,11 +1,12 @@
 import {
-  Typography,
-  Button,
   Avatar,
+  Button,
+  Divider,
   Menu,
   MenuItem,
-  Divider,
+  Typography,
 } from "@mui/material";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useUser } from "@supabase/auth-helpers-react";
 import {
   bindMenu,
@@ -13,8 +14,6 @@ import {
   usePopupState,
 } from "material-ui-popup-state/hooks";
 import router from "next/router";
-import React from "react";
-import { SupabaseService } from "../../services/NetworkService";
 import { deepGreen } from "../../utils/colors";
 
 export default function UserAvatar() {
@@ -51,7 +50,7 @@ export default function UserAvatar() {
         <MenuItem
           onClick={async () => {
             popupState.close();
-            await SupabaseService.supabase.auth.signOut();
+            await supabaseClient.auth.signOut();
           }}
         >
           <Typography>Sign Out</Typography>
