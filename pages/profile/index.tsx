@@ -116,7 +116,11 @@ export default function Index(props: Props) {
                       }}
                       value={formik.values.group}
                       renderInput={(params) => (
-                        <TextField {...params} label="Group" />
+                        <TextField
+                          {...params}
+                          label="Group"
+                          placeholder="Type to search"
+                        />
                       )}
                     />
                     <Autocomplete
@@ -132,6 +136,7 @@ export default function Index(props: Props) {
                       renderInput={(params) => (
                         <TextField
                           {...params}
+                          placeholder="Type to search"
                           label="Semester"
                           name="semester"
                         />

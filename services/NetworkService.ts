@@ -170,8 +170,17 @@ export class NetworkService implements NetworkServiceInterface {
   async searchGroups(keyword: string): Promise<NetworkResult<Group[]>> {
     const result = await this.supabase
       .from("group")
-      .select("*, students:student(id)")
+      .select("*")
       .ilike("name", `%${keyword}%`);
+
+    return {
+      data: result.data as Group[],
+      error: result.error,
+    };
+  }
+
+  async listGroups(limit: number): Promise<NetworkResult<Group[]>> {
+    const result = await this.supabase.from("group").select("*").limit(limit);
 
     return {
       data: result.data as Group[],

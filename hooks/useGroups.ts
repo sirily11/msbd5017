@@ -18,12 +18,18 @@ export default function useGroups(
 
   const groupsByKeyword = useQuery(["groups", "keyword", keyword], async () => {
     const service = new NetworkService();
+
     if (keyword) {
       const data = await service.searchGroups(keyword);
       if (data.data) {
         return data.data;
       }
       return [];
+    }
+
+    const data = await service.listGroups(10);
+    if (data.data) {
+      return data.data;
     }
 
     return [];
