@@ -37,6 +37,7 @@ specifiers:
   react-dom: 18.2.0
   react-markdown: ^8.0.3
   react-pdf: ^5.7.2
+  remark-gfm: ^3.0.1
   typescript: 4.8.3
   webpack: ^5.74.0
 
@@ -70,6 +71,7 @@ dependencies:
   react-dom: 18.2.0_react@18.2.0
   react-markdown: 8.0.3_w5j4k42lgipnm43s3brx6h3c34
   react-pdf: 5.7.2_4ifzx734of5j5ymg4ksx54vtqi
+  remark-gfm: 3.0.1
   webpack: 5.74.0
 
 devDependencies:
