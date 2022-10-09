@@ -3,14 +3,27 @@ import {
   AvatarGroup,
   Button,
   CardMedia,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
   Link,
   Typography,
 } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { Group } from "../../services/NetworkServiceInterface";
 import { Chip } from "../Chip";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import dynamic from "next/dynamic";
+import path from "path";
+import PresentationDialog from "./PresentationDialog";
+
+const PDFViewer = dynamic(() => import("./PDFReader"), {
+  ssr: false,
+});
 
 interface Props {
   group: Group;
@@ -18,6 +31,7 @@ interface Props {
 
 export default function GroupSideBar(props: Props) {
   const router = useRouter();
+  const [showPDF, setShowPDF] = useState(false);
 
   return (
     <Stack spacing={2} p={1}>
@@ -45,7 +59,9 @@ export default function GroupSideBar(props: Props) {
         Presentation File
       </Typography>
       {props.group.presentation ? (
-        <Link href={props.group.presentation}>{props.group.presentation}</Link>
+        <Button variant="outlined" onClick={() => setShowPDF(true)}>
+          <PictureAsPdfIcon /> View Presentation
+        </Button>
       ) : (
         <Typography>No presentation file</Typography>
       )}
@@ -73,6 +89,14 @@ export default function GroupSideBar(props: Props) {
       >
         Edit group info
       </Button>
+
+      {props.group.presentation && (
+        <PresentationDialog
+          open={showPDF}
+          onClose={() => setShowPDF(false)}
+          presentationURL={props.group.presentation}
+        />
+      )}
     </Stack>
   );
 }
