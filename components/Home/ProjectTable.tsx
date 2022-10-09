@@ -1,13 +1,15 @@
 import { Card, Link, Stack, Tab, Tabs } from "@mui/material";
 import React from "react";
 import { DataGrid, GridColumns } from "@mui/x-data-grid";
-import { Semester } from "../services/NetworkServiceInterface";
-import useGroups from "../hooks/useGroups";
-import { StyledDataGrid } from "./StyledDataGrid";
-import { gray } from "../utils/colors";
+import { Semester } from "../../services/NetworkServiceInterface";
+import useGroups from "../../hooks/useGroups";
+import { StyledDataGrid } from "../Common/StyledDataGrid";
+import { gray } from "../../utils/colors";
 import { useRouter } from "next/router";
+import { useProgress } from "../Common/PageProgress";
 
 interface Props {
+  tab: JSX.Element;
   semesters: Semester[];
   currentSemester: number;
 }
@@ -49,37 +51,19 @@ const columns: GridColumns = [
 ];
 
 export default function ProjectTable(props: Props) {
-  const router = useRouter();
-  const [selectedSemester, setSelectedSemester] = React.useState<number>(
-    props.currentSemester
-  );
-  const { groupsBySemester } = useGroups(selectedSemester);
+  const { groupsBySemester } = useGroups(props.currentSemester);
+  const loading = useProgress();
 
   return (
     <Card>
       <Stack>
-        <Tabs
-          value={selectedSemester}
-          sx={{ background: gray }}
-          onChange={(e, v) => {
-            router.push(`/?semester=${v}`);
-            setSelectedSemester(v);
-          }}
-        >
-          {props.semesters.map((semester, index) => (
-            <Tab
-              label={semester.name}
-              key={`semester-${semester.id}`}
-              value={semester.id}
-            />
-          ))}
-        </Tabs>
+        {props.tab}
         <StyledDataGrid
           rows={groupsBySemester?.data?.data ? groupsBySemester.data.data : []}
           columns={columns}
           autoHeight={true}
           style={{ minHeight: 500 }}
-          loading={groupsBySemester.isLoading}
+          loading={loading}
           hideFooter={true}
           disableSelectionOnClick={true}
         />

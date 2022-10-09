@@ -1,12 +1,15 @@
 import { Card, Link, Stack, Tab, Tabs } from "@mui/material";
 import { GridColumns } from "@mui/x-data-grid";
 import React from "react";
-import useGroups from "../hooks/useGroups";
-import { Group } from "../services/NetworkServiceInterface";
-import { gray } from "../utils/colors";
-import { StyledDataGrid } from "./StyledDataGrid";
+import useGroups from "../../hooks/useGroups";
+import { Group } from "../../services/NetworkServiceInterface";
+import { gray } from "../../utils/colors";
+import { useProgress } from "../Common/PageProgress";
+import { StyledDataGrid } from "../Common/StyledDataGrid";
+import CategoryTabs from "./CategoryTabs";
 
 interface Props {
+  tab: JSX.Element;
   groups: Group[];
 }
 
@@ -21,7 +24,7 @@ const columns: GridColumns = [
     headerName: "Name",
     flex: 1,
     renderCell: (params) => {
-      return <Link>{params.row.name}</Link>;
+      return <Link href={`/group/${params.id}`}>{params.row.name}</Link>;
     },
   },
   {
@@ -43,10 +46,14 @@ const columns: GridColumns = [
 ];
 
 export default function GroupTable(props: Props) {
+  const isLoading = useProgress();
+
   return (
     <Card>
       <Stack>
+        {props.tab}
         <StyledDataGrid
+          loading={isLoading}
           rows={props.groups}
           columns={columns}
           autoHeight={true}

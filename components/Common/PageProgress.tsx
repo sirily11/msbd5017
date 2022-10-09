@@ -8,7 +8,7 @@ import {
   LinearProgressProps,
 } from "@mui/material";
 
-function useProgress() {
+export function useProgress() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
