@@ -28,7 +28,7 @@ test("Testing edit group without signing in ", async ({ page }) => {
 test("Testing create group with signing in", async ({ page }) => {
   await page.goto("http://localhost:3000/");
 
-  await page.getByRole("button", { name: "Login" }).click();
+  await page.getByRole("button", { name: "Sign In" }).click();
   await expect(page).toHaveURL("http://localhost:3000/signIn");
 
   await page.getByLabel("Email").click();
@@ -39,7 +39,7 @@ test("Testing create group with signing in", async ({ page }) => {
 
   await page.getByLabel("Password").fill(password);
 
-  await page.getByRole("button", { name: "Sign In" }).click();
+  await page.getByRole("button", { name: "Sign In" }).nth(1).click();
   await expect(page).toHaveURL("http://localhost:3000/");
 
   await page.getByRole("button", { name: "Add Group" }).click();
@@ -51,7 +51,7 @@ test("Testing create group with signing in", async ({ page }) => {
 test("Testing edit group with signing in ", async ({ page }) => {
   await page.goto("http://localhost:3000/");
 
-  await page.getByRole("button", { name: "Login" }).click();
+  await page.getByRole("button", { name: "Sign In" }).click();
   await expect(page).toHaveURL("http://localhost:3000/signIn");
 
   await page.getByLabel("Email").click();
@@ -62,7 +62,7 @@ test("Testing edit group with signing in ", async ({ page }) => {
 
   await page.getByLabel("Password").fill(password);
 
-  await page.getByRole("button", { name: "Sign In" }).click();
+  await page.getByRole("button", { name: "Sign In" }).nth(1).click();
 
   await expect(page).toHaveURL("http://localhost:3000/");
 

@@ -6,7 +6,7 @@ const password = process.env.TESTING_PASSWORD!;
 test("Testing sign in with correct email and password", async ({ page }) => {
   await page.goto("http://localhost:3000/");
 
-  await page.getByRole("button", { name: "Login" }).click();
+  await page.getByRole("button", { name: "Sign In" }).click();
   await expect(page).toHaveURL("http://localhost:3000/signIn");
 
   await page.getByLabel("Email").click();
@@ -17,7 +17,7 @@ test("Testing sign in with correct email and password", async ({ page }) => {
 
   await page.getByLabel("Password").fill(password);
 
-  await page.getByRole("button", { name: "Sign In" }).click();
+  await page.getByRole("button", { name: "Sign In" }).nth(1).click();
 
   await page.screenshot();
 
@@ -36,7 +36,7 @@ test("Testing sign in with correct email and password", async ({ page }) => {
 test("Testing sign in with incorrect email and password", async ({ page }) => {
   await page.goto("http://localhost:3000/");
 
-  await page.getByRole("button", { name: "Login" }).click();
+  await page.getByRole("button", { name: "Sign In" }).click();
   await expect(page).toHaveURL("http://localhost:3000/signIn");
 
   await page.getByLabel("Email").click();
@@ -47,7 +47,7 @@ test("Testing sign in with incorrect email and password", async ({ page }) => {
 
   await page.getByLabel("Password").fill("12345");
 
-  await page.getByRole("button", { name: "Sign In" }).click();
+  await page.getByRole("button", { name: "Sign In" }).nth(1).click();
 
   const errorMsg = page.getByText("Invalid login credentials");
 

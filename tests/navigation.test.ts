@@ -26,7 +26,6 @@ test("Testing navigation between pages", async ({ page }) => {
 
   firstRow = page.getByRole("row").nth(1);
   links = firstRow.locator("a");
-  expect(await links.count()).toBe(1);
 
   nameLink = links.nth(0);
   nameText = await nameLink.innerText();
