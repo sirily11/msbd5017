@@ -2,6 +2,7 @@ import { Card, Divider } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Group } from "../../services/NetworkServiceInterface";
 
 interface Props {
@@ -24,7 +25,9 @@ export default function GroupDescriptionCard(props: Props) {
         <Divider />
         {/* Description */}
         <Box p={2}>
-          <ReactMarkdown>{props.group.description ?? ""}</ReactMarkdown>
+          <ReactMarkdown rehypePlugins={[remarkGfm]}>
+            {props.group.description ?? ""}
+          </ReactMarkdown>
         </Box>
       </Stack>
     </Card>

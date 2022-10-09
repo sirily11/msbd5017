@@ -2,6 +2,7 @@ import { Card, CardContent, Grid, Link, Typography } from "@mui/material";
 import { Container, Stack } from "@mui/system";
 import type { GetServerSideProps, NextPage } from "next";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { UserInfoCard } from "../../components/UserInfoCard";
 import { NetworkService } from "../../services/NetworkService";
 import { Student } from "../../services/NetworkServiceInterface";
@@ -67,7 +68,9 @@ const Index: NextPage<Props> = (props: Props) => {
           <Stack spacing={2}>
             <Card>
               <CardContent>
-                <ReactMarkdown>{props.student.description ?? ""}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {props.student.description ?? ""}
+                </ReactMarkdown>
               </CardContent>
             </Card>
           </Stack>
