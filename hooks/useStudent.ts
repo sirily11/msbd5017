@@ -1,13 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { useCallback } from "react";
 import { NetworkService } from "../services/NetworkService";
-import React, { useCallback } from "react";
 import { Student } from "../services/NetworkServiceInterface";
 
 export default function useStudent(studentId?: string) {
   const updateStudent = useCallback(
     async (student: Student) => {
       if (studentId) {
-        const service = new NetworkService();
+        const service = new NetworkService(supabaseClient);
         const result = await service.createOrUpdateStudentByAuthUserId(
           studentId,
           student
@@ -15,7 +15,7 @@ export default function useStudent(studentId?: string) {
         return result;
       }
     },
-    [studentId]
+    [studentId, supabaseClient]
   );
 
   return {

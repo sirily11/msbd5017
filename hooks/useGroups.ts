@@ -1,3 +1,4 @@
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useQuery } from "@tanstack/react-query";
 import React, { useCallback } from "react";
 import { NetworkService } from "../services/NetworkService";
@@ -37,11 +38,11 @@ export default function useGroups(
 
   const createOrUpdateGroup = useCallback(
     async (isCreate: boolean, group: Group) => {
-      const service = new NetworkService();
+      const service = new NetworkService(supabaseClient);
       const result = await service.createOrUpdateGroup(isCreate, group);
       return result;
     },
-    [groupId]
+    [groupId, supabaseClient]
   );
 
   return {
