@@ -1,10 +1,8 @@
-import { Info } from "@mui/icons-material";
 import {
   alpha,
   Avatar,
   Box,
   Card,
-  CardMedia,
   styled,
   Tab,
   Tabs,

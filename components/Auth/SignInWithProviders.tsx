@@ -1,14 +1,8 @@
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Card, CardActionArea, Tooltip, Typography } from "@mui/material";
 import { Box, Stack } from "@mui/system";
-import React, { useCallback } from "react";
-import Image from "next/image";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import Image from "next/image";
+import { useCallback } from "react";
 
 type Provider = "google" | "facebook" | "twitter" | "github" | "apple";
 

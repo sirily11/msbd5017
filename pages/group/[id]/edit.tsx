@@ -1,31 +1,8 @@
-import Editor from "@monaco-editor/react";
-import { LoadingButton } from "@mui/lab";
-import {
-  Autocomplete,
-  Avatar,
-  Breadcrumbs,
-  Button,
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  Link,
-  TextField,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import { Box, Container, Stack } from "@mui/system";
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
-import { useFormik } from "formik";
-import ChipInput from "@sarakusha/material-ui-chip-input";
 import { GetServerSideProps, NextPage } from "next";
-import Image from "next/image";
-import { NetworkService } from "../../../services/NetworkService";
-import { Group, Semester } from "../../../services/NetworkServiceInterface";
-import { useSemesters } from "../../../hooks/useSemesters";
-import { useCategories } from "../../../hooks/useCategory";
-import useGroups from "../../../hooks/useGroups";
 import GroupForm from "../../../components/Group/GroupForm";
+import { NetworkService } from "../../../services/NetworkService";
+import { Group } from "../../../services/NetworkServiceInterface";
 
 interface Props {
   group: Group;

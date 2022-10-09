@@ -1,26 +1,29 @@
 import Editor from "@monaco-editor/react";
 import { LoadingButton } from "@mui/lab";
 import {
-  Typography,
+  Autocomplete,
+  Avatar,
   Breadcrumbs,
-  Grid,
+  Button,
   Card,
   CardContent,
-  Tooltip,
-  Avatar,
-  TextField,
-  Autocomplete,
-  Button,
   Divider,
+  Grid,
   Link,
+  TextField,
+  Tooltip,
+  Typography,
 } from "@mui/material";
-import { Container, Stack, Box } from "@mui/system";
+import { Box, Container, Stack } from "@mui/system";
 import ChipInput from "@sarakusha/material-ui-chip-input";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { useUser } from "@supabase/auth-helpers-react";
 import { useFormik } from "formik";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
-import React from "react";
+import { extname, join } from "path";
+import React, { useCallback } from "react";
 import { useCategories } from "../../hooks/useCategory";
 import useGroups from "../../hooks/useGroups";
 import { useSemesters } from "../../hooks/useSemesters";
@@ -50,6 +53,8 @@ export default function GroupForm(props: Props) {
   const isCreate = props.group === undefined;
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
+  const [uploading, setUploading] = React.useState(false);
+  const { user } = useUser();
 
   const formik = useFormik({
     initialValues: props.group ?? defaultGroup,
@@ -82,6 +87,39 @@ export default function GroupForm(props: Props) {
       }
     },
   });
+
+  const uploadFile = useCallback(
+    async (file: File) => {
+      if (!user) {
+        return;
+      }
+
+      console.log(supabaseClient.auth.user());
+
+      const ext = extname(file.name);
+      const uploadPath = join(
+        `${user.id}`,
+        "presentations",
+        `${user.id}${ext}`
+      );
+      console.log(uploadPath);
+
+      setUploading(true);
+      const { data, error } = await supabaseClient.storage
+        .from("msbd5017")
+        .upload(uploadPath, file, { upsert: true });
+      setUploading(false);
+      if (error) {
+        enqueueSnackbar(`Error uploading file: ${error.message}`, {
+          variant: "error",
+          anchorOrigin: { horizontal: "right", vertical: "top" },
+        });
+        return;
+      }
+      formik.setFieldValue("presentation", data!.Key);
+    },
+    [user]
+  );
 
   return (
     <Container>
@@ -166,15 +204,31 @@ export default function GroupForm(props: Props) {
                       )}
                     />
 
-                    <Button variant="contained" component="label">
+                    <LoadingButton
+                      variant="contained"
+                      component="label"
+                      loading={uploading}
+                    >
                       Upload Presentation
                       <input
                         hidden
                         accept="application/pdf"
-                        multiple
                         type="file"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            await uploadFile(file);
+                          }
+                        }}
                       />
-                    </Button>
+                    </LoadingButton>
+                    {formik.values.presentation && (
+                      <Box pl={1}>
+                        <Typography variant="caption">
+                          Uploaded: {formik.values.presentation}
+                        </Typography>
+                      </Box>
+                    )}
                     <Box pl={1}>
                       <Typography variant="caption">
                         Only PDF format is supported
