@@ -5,15 +5,10 @@ const homePage = "http://localhost:3000/";
 test("Testing navigation between pages", async ({ page }) => {
   await page.goto(homePage);
 
-  await page
-    .getByRole("row", { name: "0 dApp My Name 0" })
-    .getByRole("cell", { name: "dApp" })
-    .click();
-
   let firstRow = page.getByRole("row").nth(1);
+  expect(firstRow).toBeVisible();
 
   let links = firstRow.locator("a");
-  expect(await links.count()).toBe(2);
 
   let categoryLink = links.nth(0);
   let nameLink = links.nth(1);

@@ -1,5 +1,7 @@
-import { Card, Link, Stack } from "@mui/material";
+import { Button, Card, Link, Stack } from "@mui/material";
 import { GridColumns } from "@mui/x-data-grid";
+import { useUser } from "@supabase/auth-helpers-react";
+import { useRouter } from "next/router";
 import useGroups from "../../hooks/useGroups";
 import { Semester } from "../../services/NetworkServiceInterface";
 import { useProgress } from "../Common/PageProgress";
@@ -50,6 +52,8 @@ const columns: GridColumns = [
 export default function ProjectTable(props: Props) {
   const { groupsBySemester } = useGroups(props.currentSemester);
   const loading = useProgress();
+  const router = useRouter();
+  const { user } = useUser();
 
   return (
     <Card>
@@ -64,6 +68,17 @@ export default function ProjectTable(props: Props) {
           hideFooter={true}
           disableSelectionOnClick={true}
         />
+        <Stack direction={"row"} p={1} justifyContent="flex-end">
+          {user && (
+            <Button
+              onClick={() => {
+                router.push("/group/create");
+              }}
+            >
+              Add Group
+            </Button>
+          )}
+        </Stack>
       </Stack>
     </Card>
   );
