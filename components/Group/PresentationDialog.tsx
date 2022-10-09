@@ -1,3 +1,4 @@
+import DownloadIcon from "@mui/icons-material/Download";
 import {
   Button,
   Dialog,
@@ -10,7 +11,6 @@ import {
 import dynamic from "next/dynamic";
 import path, { join } from "path";
 import { useMemo } from "react";
-import DownloadIcon from "@mui/icons-material/Download";
 
 const PDFViewer = dynamic(() => import("./PDFReader"), {
   ssr: false,

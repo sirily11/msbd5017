@@ -1,12 +1,8 @@
-import { Card, Link, Stack, Tab, Tabs } from "@mui/material";
+import { Card, Link, Stack } from "@mui/material";
 import { GridColumns } from "@mui/x-data-grid";
-import React from "react";
-import useGroups from "../../hooks/useGroups";
 import { Group } from "../../services/NetworkServiceInterface";
-import { gray } from "../../utils/colors";
 import { useProgress } from "../Common/PageProgress";
 import { StyledDataGrid } from "../Common/StyledDataGrid";
-import CategoryTabs from "./CategoryTabs";
 
 interface Props {
   tab: JSX.Element;

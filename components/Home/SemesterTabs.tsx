@@ -1,4 +1,4 @@
-import { Tabs, Tab } from "@mui/material";
+import { Tab, Tabs } from "@mui/material";
 import { useRouter } from "next/router";
 import React from "react";
 import { Semester } from "../../services/NetworkServiceInterface";

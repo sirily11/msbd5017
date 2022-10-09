@@ -1,24 +1,19 @@
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import {
   Avatar,
   AvatarGroup,
   Button,
   CardMedia,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Divider,
   Link,
   Typography,
 } from "@mui/material";
 import { Box, Stack } from "@mui/system";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Group } from "../../services/NetworkServiceInterface";
 import { Chip } from "../Chip";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import dynamic from "next/dynamic";
-import path from "path";
 import PresentationDialog from "./PresentationDialog";
 
 const PDFViewer = dynamic(() => import("./PDFReader"), {

@@ -1,14 +1,11 @@
-import { Breadcrumbs, Card, Grid, Link, Typography } from "@mui/material";
+import { Breadcrumbs, Grid, Link, Typography } from "@mui/material";
 import { Box, Container, Stack } from "@mui/system";
 import type { GetServerSideProps, NextPage } from "next";
-import Image from "next/image";
-import { Chip } from "../../../components/Chip";
 import { NetworkService } from "../../../services/NetworkService";
 import { Group } from "../../../services/NetworkServiceInterface";
-import ReactMarkdown from "react-markdown";
-import GroupDescriptionCard from "../../../components/GroupDescriptionCard";
+
+import GroupDescriptionCard from "../../../components/Group/GroupDescriptionCard";
 import GroupSideBar from "../../../components/Group/GroupSideBar";
-import { useRouter } from "next/router";
 
 interface Props {
   group: Group;

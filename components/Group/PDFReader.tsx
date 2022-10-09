@@ -1,9 +1,6 @@
 import { CircularProgress } from "@mui/material";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { join } from "path";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
-import throttle from "lodash.throttle";
 
 import workerSrc from "../../pdf-worker";
 
@@ -14,8 +11,6 @@ interface Props {
 }
 
 export default function PDFReader(props: Props) {
-
-
   const [numPages, setNumPages] = React.useState<number>();
   const [width, setWidth] = React.useState<number>();
 

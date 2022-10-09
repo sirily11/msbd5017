@@ -1,7 +1,7 @@
-import { AppBar, Toolbar, Typography, Link } from "@mui/material";
+import { AppBar, Link, Toolbar, Typography } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import Head from "next/head";
-import { NextCirculatProgressBar, NextLinearProgressBar } from "./Common/PageProgress";
+import { NextCirculatProgressBar } from "./Common/PageProgress";
 import UserAvatar from "./User/Avatar";
 
 export default function Layout({ children }: any) {
