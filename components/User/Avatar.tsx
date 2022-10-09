@@ -32,7 +32,7 @@ export default function UserAvatar() {
           </Typography>
         </Avatar>
       ) : (
-        <Button onClick={() => router.push("/signIn")}>Login</Button>
+        <Button onClick={() => router.push("/signIn")}>Sign In</Button>
       )}
       <Menu {...bindMenu(popupState)}>
         <MenuItem disabled>

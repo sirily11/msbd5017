@@ -126,4 +126,6 @@ export interface NetworkServiceInterface {
   getCategories(): Promise<NetworkResult<Category[]>>;
 
   deleteGroup(id: number): Promise<NetworkResult<void>>;
+
+  listGroups(limit: number): Promise<NetworkResult<Group[]>>;
 }

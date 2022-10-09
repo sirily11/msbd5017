@@ -36,7 +36,11 @@ const columns: GridColumns = [
     headerName: "Semester",
     flex: 1,
     renderCell: (params) => {
-      return params.row.semester.name;
+      return (
+        <Link href={`/?semester=${params.row.semester.id}`}>
+          {params.row.semester.name}
+        </Link>
+      );
     },
   },
 ];

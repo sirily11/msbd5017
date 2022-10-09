@@ -6,6 +6,7 @@ import {
   CardMedia,
   Divider,
   Link,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { Box, Stack } from "@mui/system";
@@ -67,15 +68,19 @@ export default function GroupSideBar(props: Props) {
       </Typography>
       <AvatarGroup max={10} sx={{ justifyContent: "start" }}>
         {props.group.students?.map((student) => (
-          <Avatar
+          <Tooltip
             key={student.id}
-            sx={{ cursor: "pointer" }}
-            onClick={() => {
-              router.push(`/student/${student.id}`);
-            }}
+            title={`${student.firstName} ${student.lastName}`}
           >
-            {student.firstName[0]}
-          </Avatar>
+            <Avatar
+              sx={{ cursor: "pointer" }}
+              onClick={() => {
+                router.push(`/student/${student.id}`);
+              }}
+            >
+              {student.firstName[0]}
+            </Avatar>
+          </Tooltip>
         ))}
       </AvatarGroup>
       <Button
