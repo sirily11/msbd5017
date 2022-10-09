@@ -1,13 +1,22 @@
-import { Breadcrumbs, Link, Typography } from "@mui/material";
+import {
+  Alert,
+  Breadcrumbs,
+  Card,
+  CardContent,
+  Link,
+  Typography,
+} from "@mui/material";
 import { Container, Stack } from "@mui/system";
 import type { GetServerSideProps, NextPage } from "next";
-import GroupTable from "../../components/GroupTable";
+import CategoryTabs from "../../components/Category/CategoryTabs";
+import GroupTable from "../../components/Category/GroupTable";
 import { NetworkService } from "../../services/NetworkService";
 import { Category, Group } from "../../services/NetworkServiceInterface";
 
 interface Props {
   groups: Group[];
   category: Category;
+  categories: Category[];
 }
 
 const Index: NextPage<Props> = (props: Props) => {
@@ -24,8 +33,27 @@ const Index: NextPage<Props> = (props: Props) => {
           <Typography color="text.primary">{props.category.name}</Typography>
         </Breadcrumbs>
 
-        <Typography>{props.category.description}</Typography>
-        <GroupTable groups={props.groups} />
+        <Card
+          variant="outlined"
+          sx={{ boxShadow: "none" }}
+          style={{ marginBottom: 10 }}
+        >
+          <CardContent>
+            <Typography>
+              <Typography fontWeight={"bold"}>Description: </Typography>{" "}
+              {props.category.description}
+            </Typography>
+          </CardContent>
+        </Card>
+        <GroupTable
+          groups={props.groups}
+          tab={
+            <CategoryTabs
+              categories={props.categories}
+              currentCategory={props.category}
+            />
+          }
+        />
       </Stack>
     </Container>
   );
@@ -39,10 +67,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const service = new NetworkService();
   const groups = await service.getGroupsByCategory(context.params?.id as any);
   const category = await service.getCategoryById(context.params?.id as any);
+  const categories = await service.getCategories();
 
-  if (groups.error || category.error) {
+  if (groups.error || category.error || categories.error) {
     console.log("Groups error: ", groups.error);
     console.log("Category error: ", category.error);
+    console.log("Categories error: ", categories.error);
     return {
       notFound: true,
     };
@@ -52,6 +82,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     props: {
       groups: groups.data,
       category: category.data,
+      categories: categories.data,
     },
   };
 };

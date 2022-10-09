@@ -9,8 +9,8 @@ import {
 } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { useRouter } from "next/router";
-import { Group } from "../services/NetworkServiceInterface";
-import { Chip } from "./Chip";
+import { Group } from "../../services/NetworkServiceInterface";
+import { Chip } from "../Chip";
 
 interface Props {
   group: Group;

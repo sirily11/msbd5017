@@ -2,7 +2,7 @@ import { Card, Chip, Divider, Typography } from "@mui/material";
 import { Stack, Box } from "@mui/system";
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import { Group } from "../services/NetworkServiceInterface";
+import { Group } from "../../services/NetworkServiceInterface";
 import Image from "next/image";
 
 interface Props {

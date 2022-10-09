@@ -6,8 +6,8 @@ import { Chip } from "../../../components/Chip";
 import { NetworkService } from "../../../services/NetworkService";
 import { Group } from "../../../services/NetworkServiceInterface";
 import ReactMarkdown from "react-markdown";
-import GroupDescriptionCard from "../../../components/GroupDescriptionCard";
-import GroupSideBar from "../../../components/GroupSideBar";
+import GroupDescriptionCard from "../../../components/Group/GroupDescriptionCard";
+import GroupSideBar from "../../../components/Group/GroupSideBar";
 import { useRouter } from "next/router";
 
 interface Props {

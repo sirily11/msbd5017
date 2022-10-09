@@ -1,7 +1,7 @@
 import { Card, CircularProgress, Divider, Typography } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import React from "react";
-import { Statistic } from "../services/NetworkServiceInterface";
+import { Statistic } from "../../services/NetworkServiceInterface";
 import HomeIcon from "@mui/icons-material/Home";
 
 interface Props {

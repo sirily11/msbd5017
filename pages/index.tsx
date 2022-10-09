@@ -1,8 +1,9 @@
 import { Typography } from "@mui/material";
 import { Container, Stack } from "@mui/system";
 import type { GetServerSideProps, NextPage } from "next";
-import ProjectTable from "../components/ProjectTable";
-import StatisticsCard from "../components/StatisticsCard";
+import ProjectTable from "../components/Home/ProjectTable";
+import SemesterTabs from "../components/Home/SemesterTabs";
+import StatisticsCard from "../components/Home/StatisticsCard";
 import { NetworkService } from "../services/NetworkService";
 import { Semester, Statistic } from "../services/NetworkServiceInterface";
 
@@ -21,6 +22,12 @@ const Home: NextPage<Props> = (props: Props) => {
         </Typography>
         <StatisticsCard statistics={props.statistics} />
         <ProjectTable
+          tab={
+            <SemesterTabs
+              semesters={props.semesters}
+              semester={props.currentSemester}
+            />
+          }
           semesters={props.semesters}
           currentSemester={props.currentSemester}
         />
