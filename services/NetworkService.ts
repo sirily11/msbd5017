@@ -225,8 +225,6 @@ export class NetworkService implements NetworkServiceInterface {
         error: result.error,
       };
     }
-
-    console.log("Updating group", newGroup);
     const result = await this.supabase.from("group").update(newGroup).single();
 
     return {
