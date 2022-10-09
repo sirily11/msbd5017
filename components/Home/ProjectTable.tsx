@@ -3,7 +3,7 @@ import { GridColumns } from "@mui/x-data-grid";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 import useGroups from "../../hooks/useGroups";
-import { Semester } from "../../services/NetworkServiceInterface";
+import { Group, Semester } from "../../services/NetworkServiceInterface";
 import { useProgress } from "../Common/PageProgress";
 import { StyledDataGrid } from "../Common/StyledDataGrid";
 
@@ -11,6 +11,7 @@ interface Props {
   tab: JSX.Element;
   semesters: Semester[];
   currentSemester: number;
+  groups: Group[];
 }
 
 const columns: GridColumns = [
@@ -50,7 +51,6 @@ const columns: GridColumns = [
 ];
 
 export default function ProjectTable(props: Props) {
-  const { groupsBySemester } = useGroups(props.currentSemester);
   const loading = useProgress();
   const router = useRouter();
   const { user } = useUser();
@@ -60,7 +60,7 @@ export default function ProjectTable(props: Props) {
       <Stack>
         {props.tab}
         <StyledDataGrid
-          rows={groupsBySemester?.data?.data ? groupsBySemester.data.data : []}
+          rows={props.groups}
           columns={columns}
           autoHeight={true}
           style={{ minHeight: 500 }}
