@@ -5,12 +5,17 @@ import ProjectTable from "../components/Home/ProjectTable";
 import SemesterTabs from "../components/Home/SemesterTabs";
 import StatisticsCard from "../components/Home/StatisticsCard";
 import { NetworkService } from "../services/NetworkService";
-import { Semester, Statistic } from "../services/NetworkServiceInterface";
+import {
+  Semester,
+  Statistic,
+  Group,
+} from "../services/NetworkServiceInterface";
 
 interface Props {
   semesters: Semester[];
   statistics: Statistic;
   currentSemester: number;
+  groups: Group[];
 }
 
 const Home: NextPage<Props> = (props: Props) => {
@@ -30,6 +35,7 @@ const Home: NextPage<Props> = (props: Props) => {
           }
           semesters={props.semesters}
           currentSemester={props.currentSemester}
+          groups={props.groups}
         />
       </Stack>
     </Container>
@@ -43,21 +49,24 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 ) => {
   const service = new NetworkService();
   const semesters = await service.getSemesters();
+  let currentSemester = semesters.data[0].id;
+
+  if (context.query?.semester) {
+    currentSemester = parseInt(context.query?.semester as string);
+  }
+
   const statistics = await service.getStatistics();
+  const groups = await service.getGroupsBySemester(currentSemester);
+
   if (semesters.data.length === 0) {
     return {
       props: {
         semesters: [],
         statistics: statistics.data,
         currentSemester: 0,
+        groups: [],
       },
     };
-  }
-
-  let currentSemester = semesters.data[0].id;
-
-  if (context.query?.semester) {
-    currentSemester = parseInt(context.query?.semester as string);
   }
 
   if (semesters.error || statistics.error) {
@@ -71,6 +80,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       semesters: semesters.data,
       statistics: statistics.data,
       currentSemester: currentSemester,
+      groups: groups.data,
     },
   };
 };
