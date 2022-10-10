@@ -14,10 +14,12 @@ import {
   usePopupState,
 } from "material-ui-popup-state/hooks";
 import router from "next/router";
+import useStudent from "../../hooks/useStudent";
 import { deepGreen } from "../../utils/colors";
 
 export default function UserAvatar() {
   const { user } = useUser();
+  const { student } = useStudent(user?.id);
   const popupState = usePopupState({ variant: "popover", popupId: "demoMenu" });
 
   return (
@@ -47,6 +49,20 @@ export default function UserAvatar() {
         >
           <Typography>Profile</Typography>
         </MenuItem>
+
+        {student.data?.group && (
+          <MenuItem
+            onClick={() => {
+              router.push(`/group/${student?.data?.group?.id}`);
+              popupState.close();
+            }}
+          >
+            <Typography>My Group</Typography>
+          </MenuItem>
+        )}
+
+        <Divider />
+
         <MenuItem
           onClick={async () => {
             popupState.close();
