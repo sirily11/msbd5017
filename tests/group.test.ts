@@ -76,4 +76,15 @@ test("Testing edit group with signing in ", async ({ page }) => {
   await page.getByRole("button", { name: "Edit group info" }).click();
 
   await expect(page.locator('role=heading[name="Description"]')).toBeVisible();
+
+  // click my group
+  await page
+    .locator('header:has-text("MSBD5017 HomePages")')
+    .getByRole("paragraph")
+    .click();
+
+  await page.getByText("My Group").click();
+  await page.waitForNavigation();
+
+  await page.getByRole("heading", { name: "GitHub Link" }).click();
 });
