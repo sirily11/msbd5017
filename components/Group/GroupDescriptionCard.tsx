@@ -4,6 +4,7 @@ import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Group } from "../../services/NetworkServiceInterface";
+import { MarkdownImage } from "../Common/MarkdownImage";
 
 interface Props {
   group: Group;
@@ -25,7 +26,12 @@ export default function GroupDescriptionCard(props: Props) {
         <Divider />
         {/* Description */}
         <Box p={2}>
-          <ReactMarkdown rehypePlugins={[remarkGfm]}>
+          <ReactMarkdown
+            rehypePlugins={[remarkGfm]}
+            components={{
+              img: MarkdownImage,
+            }}
+          >
             {props.group.description ?? ""}
           </ReactMarkdown>
         </Box>
