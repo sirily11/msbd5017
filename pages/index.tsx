@@ -1,6 +1,9 @@
-import { Typography } from "@mui/material";
+import { Link, Typography } from "@mui/material";
 import { Container, Stack } from "@mui/system";
+import { getUser } from "@supabase/auth-helpers-nextjs";
 import type { GetServerSideProps, NextPage } from "next";
+import { useSnackbar } from "notistack";
+import { useEffect, useState } from "react";
 import ProjectTable from "../components/Home/ProjectTable";
 import SemesterTabs from "../components/Home/SemesterTabs";
 import StatisticsCard from "../components/Home/StatisticsCard";
@@ -16,9 +19,31 @@ interface Props {
   statistics: Statistic;
   currentSemester: number;
   groups: Group[];
+  showSelectGroup: boolean;
 }
 
 const Home: NextPage<Props> = (props: Props) => {
+  const { enqueueSnackbar } = useSnackbar();
+  const [hasShownSelectGroup, setHasShownSelectGroup] = useState(false);
+
+  useEffect(() => {
+    if (props.showSelectGroup && !hasShownSelectGroup) {
+      setHasShownSelectGroup(true);
+      enqueueSnackbar(
+        <Typography>
+          Please select a group in your{" "}
+          <Link href="/profile" color={"rgb(255, 255, 255)"}>
+            Profile
+          </Link>
+        </Typography>,
+        {
+          variant: "info",
+          anchorOrigin: { horizontal: "right", vertical: "top" },
+        }
+      );
+    }
+  }, [props.showSelectGroup]);
+
   return (
     <Container>
       <Stack p={2} spacing={2} mt={5}>
@@ -47,16 +72,28 @@ export default Home;
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
+  const { user } = await getUser(context);
   const service = new NetworkService();
   const semesters = await service.getSemesters();
   let currentSemester = semesters.data[0].id;
+  let showSelectGroup = false;
 
   if (context.query?.semester) {
     currentSemester = parseInt(context.query?.semester as string);
   }
 
-  const statistics = await service.getStatistics();
-  const groups = await service.getGroupsBySemester(currentSemester);
+  const [statistics, groups, student] = await Promise.all([
+    service.getStatistics(),
+    service.getGroupsBySemester(currentSemester),
+    service.getStudentByAuthUserId(user?.id as string),
+  ]);
+
+  if (
+    (student.data?.group === null || student.data?.group === undefined) &&
+    user
+  ) {
+    showSelectGroup = true;
+  }
 
   if (semesters.data.length === 0) {
     return {
@@ -65,6 +102,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
         statistics: statistics.data,
         currentSemester: 0,
         groups: [],
+        showSelectGroup: showSelectGroup,
       },
     };
   }
@@ -75,12 +113,15 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     };
   }
 
+  const props: Props = {
+    semesters: semesters.data,
+    statistics: statistics.data,
+    currentSemester: currentSemester,
+    groups: groups.data,
+    showSelectGroup: showSelectGroup,
+  };
+
   return {
-    props: {
-      semesters: semesters.data,
-      statistics: statistics.data,
-      currentSemester: currentSemester,
-      groups: groups.data,
-    },
+    props: props,
   };
 };

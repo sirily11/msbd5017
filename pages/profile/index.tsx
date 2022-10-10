@@ -259,30 +259,6 @@ export const getServerSideProps: GetServerSideProps<Props> = withPageAuth({
       };
     }
 
-    if (!Boolean(student.data)) {
-      const createdStudent = await service.createOrUpdateStudentByAuthUserId(
-        user.id,
-        {
-          firstName: "",
-          lastName: "",
-          is_admin: false,
-        }
-      );
-
-      if (createdStudent.error) {
-        console.log("Creation error", createdStudent.error);
-        return {
-          notFound: true,
-        };
-      }
-
-      return {
-        props: {
-          student: createdStudent.data,
-        },
-      };
-    }
-
     return {
       props: {
         found: true,
