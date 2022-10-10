@@ -1,4 +1,4 @@
-import { Link, Typography } from "@mui/material";
+import { Alert, Link, Typography } from "@mui/material";
 import { Container, Stack } from "@mui/system";
 import { getUser } from "@supabase/auth-helpers-nextjs";
 import type { GetServerSideProps, NextPage } from "next";
@@ -23,33 +23,17 @@ interface Props {
 }
 
 const Home: NextPage<Props> = (props: Props) => {
-  const { enqueueSnackbar } = useSnackbar();
-  const [hasShownSelectGroup, setHasShownSelectGroup] = useState(false);
-
-  useEffect(() => {
-    if (props.showSelectGroup && !hasShownSelectGroup) {
-      setHasShownSelectGroup(true);
-      enqueueSnackbar(
-        <Typography>
-          Please select a group in your{" "}
-          <Link href="/profile" color={"rgb(255, 255, 255)"}>
-            Profile
-          </Link>
-        </Typography>,
-        {
-          variant: "info",
-          anchorOrigin: { horizontal: "right", vertical: "top" },
-        }
-      );
-    }
-  }, [props.showSelectGroup]);
-
   return (
     <Container>
       <Stack p={2} spacing={2} mt={5}>
         <Typography fontWeight={"bold"} variant="h6">
           MSBD5017 Projects
         </Typography>
+        {props.showSelectGroup && (
+          <Alert severity="info">
+            Please select a group in your <Link href="/profile">profile</Link>
+          </Alert>
+        )}
         <StatisticsCard statistics={props.statistics} />
         <ProjectTable
           tab={
