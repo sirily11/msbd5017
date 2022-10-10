@@ -7,7 +7,10 @@ import {
   DialogTitle,
   IconButton,
   Tooltip,
+  Typography,
 } from "@mui/material";
+import { Stack } from "@mui/system";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import dynamic from "next/dynamic";
 import path, { join } from "path";
 import { useMemo } from "react";
@@ -25,30 +28,29 @@ interface Props {
 export default function PresentationDialog(props: Props) {
   const remotePDFURL = useMemo(() => {
     const endpoint = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const path = join(
-      endpoint,
-      "storage",
-      "v1",
-      "object",
-      "public",
-      props.presentationURL
-    );
+    const path = `${endpoint}/storage/v1/object/public/${props.presentationURL}`;
+
     return path;
   }, [props.presentationURL]);
 
   return (
     <Dialog open={props.open} onClose={props.onClose} fullWidth maxWidth="lg">
       <DialogTitle>
-        {path.basename(props.presentationURL!)}
-        <Tooltip title="Download presentation file">
-          <IconButton
-            onClick={() => {
-              open(remotePDFURL);
-            }}
-          >
-            <DownloadIcon />
-          </IconButton>
-        </Tooltip>
+        <Stack>
+          <Stack direction={"row"} spacing={2} alignItems="center">
+            {path.basename(props.presentationURL!)}
+            <Tooltip title="Download presentation file">
+              <IconButton
+                onClick={() => {
+                  open(remotePDFURL);
+                }}
+              >
+                <DownloadIcon />
+              </IconButton>
+            </Tooltip>
+          </Stack>
+          <Typography variant="caption">{remotePDFURL}</Typography>
+        </Stack>
       </DialogTitle>
       <DialogContent>
         <PDFViewer pdfUrl={remotePDFURL!} />
