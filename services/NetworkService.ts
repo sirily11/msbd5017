@@ -196,8 +196,8 @@ export class NetworkService implements NetworkServiceInterface {
       .from("student")
       .upsert({
         ...student,
-        gid: student.group?.id,
-        sid: student.semester?.id,
+        gid: student.group?.id ?? null,
+        sid: student.semester?.id ?? null,
         group: undefined,
         semester: undefined,
         uid,
